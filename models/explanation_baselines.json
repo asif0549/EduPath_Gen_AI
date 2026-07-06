@@ -1,0 +1,15 @@
+{
+  "source": "data/students_dataset.csv",
+  "method": "numeric mean and categorical mode from the training dataset",
+  "values": {
+    "attendance": 80.05121024204841,
+    "cgpa": 7.488751750350071,
+    "aptitude_score": 49.35107021404281,
+    "coding_score": 50.06121224244849,
+    "communication_score": 50.33186637327466,
+    "mock_exam_score": 49.45629125825165,
+    "backlogs": 0.7289457891578316,
+    "career_interest": "AI Researcher",
+    "exam_selected": "No exam"
+  }
+}

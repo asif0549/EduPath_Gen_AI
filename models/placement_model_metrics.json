@@ -1,0 +1,80 @@
+{
+  "model": "RandomForestClassifier",
+  "dataset_rows": 4999,
+  "train_rows": 3999,
+  "test_rows": 1000,
+  "features": [
+    "attendance",
+    "cgpa",
+    "aptitude_score",
+    "coding_score",
+    "communication_score",
+    "mock_exam_score",
+    "backlogs",
+    "career_interest"
+  ],
+  "classes": [
+    "In Progress",
+    "Not Placed",
+    "Placed"
+  ],
+  "accuracy": 0.944,
+  "classification_report": {
+    "In Progress": {
+      "precision": 0.9141630901287554,
+      "recall": 0.9638009049773756,
+      "f1-score": 0.9383259911894273,
+      "support": 442.0
+    },
+    "Not Placed": {
+      "precision": 0.9724310776942355,
+      "recall": 0.941747572815534,
+      "f1-score": 0.9568434032059187,
+      "support": 412.0
+    },
+    "Placed": {
+      "precision": 0.9629629629629629,
+      "recall": 0.8904109589041096,
+      "f1-score": 0.9252669039145908,
+      "support": 146.0
+    },
+    "accuracy": 0.944,
+    "macro avg": {
+      "precision": 0.9498523769286513,
+      "recall": 0.9319864788990064,
+      "f1-score": 0.9401454327699789,
+      "support": 1000.0
+    },
+    "weighted avg": {
+      "precision": 0.9452942824395275,
+      "recall": 0.944,
+      "f1-score": 0.9440485381980955,
+      "support": 1000.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "In Progress",
+      "Not Placed",
+      "Placed"
+    ],
+    "values": [
+      [
+        426,
+        11,
+        5
+      ],
+      [
+        24,
+        388,
+        0
+      ],
+      [
+        16,
+        0,
+        130
+      ]
+    ]
+  },
+  "random_state": 42
+}

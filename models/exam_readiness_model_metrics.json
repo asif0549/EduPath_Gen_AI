@@ -1,0 +1,79 @@
+{
+  "model": "RandomForestClassifier",
+  "target_definition": "Proxy score: 50% mock exam + 25% aptitude + 15% attendance + 10% normalized CGPA - 2 points per backlog; bands <50, 50-69.99, >=70",
+  "dataset_rows": 4999,
+  "train_rows": 3999,
+  "test_rows": 1000,
+  "features": [
+    "attendance",
+    "cgpa",
+    "aptitude_score",
+    "mock_exam_score",
+    "backlogs",
+    "exam_selected"
+  ],
+  "class_distribution": {
+    "Needs Preparation": 1963,
+    "Developing": 2021,
+    "Ready": 1015
+  },
+  "accuracy": 0.94,
+  "classification_report": {
+    "Needs Preparation": {
+      "precision": 0.9618320610687023,
+      "recall": 0.9618320610687023,
+      "f1-score": 0.9618320610687023,
+      "support": 393.0
+    },
+    "Developing": {
+      "precision": 0.9195121951219513,
+      "recall": 0.9331683168316832,
+      "f1-score": 0.9262899262899262,
+      "support": 404.0
+    },
+    "Ready": {
+      "precision": 0.9390862944162437,
+      "recall": 0.9113300492610837,
+      "f1-score": 0.925,
+      "support": 203.0
+    },
+    "accuracy": 0.94,
+    "macro avg": {
+      "precision": 0.9401435168689657,
+      "recall": 0.9354434757204898,
+      "f1-score": 0.9377073291195428,
+      "support": 1000.0
+    },
+    "weighted avg": {
+      "precision": 0.9401174445957658,
+      "recall": 0.94,
+      "f1-score": 0.9399961302211302,
+      "support": 1000.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "Needs Preparation",
+      "Developing",
+      "Ready"
+    ],
+    "values": [
+      [
+        378,
+        15,
+        0
+      ],
+      [
+        15,
+        377,
+        12
+      ],
+      [
+        0,
+        18,
+        185
+      ]
+    ]
+  },
+  "random_state": 42
+}
