@@ -1,3 +1,4 @@
+const API_URL = "https://edupathgenai-production.up.railway.app";
 export interface StudentProfile {
   name?: string;
   degree?: string;
@@ -209,8 +210,25 @@ function buildStudentPrediction(profile: StudentProfile): StudentPrediction {
   };
 }
 
-export function predictStudent(profile: StudentProfile): Promise<StudentPrediction> {
-  return Promise.resolve(buildStudentPrediction(profile));
+export async function predictStudent(
+  profile: StudentProfile
+): Promise<StudentPrediction> {
+  const response = await fetch(
+    `${API_URL}/api/v1/predictions/student`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Prediction failed");
+  }
+
+  return await response.json();
 }
 
 export interface DocumentInfo {
@@ -219,14 +237,33 @@ export interface DocumentInfo {
 }
 
 export async function uploadDocument(file: File): Promise<DocumentInfo> {
-  const stored = JSON.parse(localStorage.getItem(OFFLINE_DOCUMENT_KEY) ?? "[]") as DocumentInfo[];
-  const next = [...stored, { filename: file.name, size: file.size }];
-  localStorage.setItem(OFFLINE_DOCUMENT_KEY, JSON.stringify(next));
-  return next[next.length - 1];
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(
+    `${API_URL}/api/v1/documents/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Upload failed");
+  }
+
+  return await response.json();
 }
 
 export async function listDocuments(): Promise<string[]> {
-  return JSON.parse(localStorage.getItem(OFFLINE_DOCUMENT_KEY) ?? "[]").map((item: DocumentInfo) => item.filename);
+  const response = await fetch(`${API_URL}/api/v1/documents`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch documents");
+  }
+
+  const data = await response.json();
+  return data.files;
 }
 
 export interface AssistantRequest {
@@ -239,7 +276,23 @@ export interface AssistantResponse {
   recommendations?: any;
 }
 
-export async function assistantMessage(payload: AssistantRequest): Promise<AssistantResponse> {
-  const advice = payload.profile ? `I reviewed your profile; the top path is ${makeCareerRecommendations(payload.profile)[0]?.career || "a strong career choice"}.` : "Send your question and I’ll help you evaluate your profile.";
-  return Promise.resolve({ reply: advice, recommendations: payload.profile ? makeCareerRecommendations(payload.profile) : [] });
+export async function assistantMessage(
+  payload: AssistantRequest
+): Promise<AssistantResponse> {
+  const response = await fetch(
+    `${API_URL}/api/v1/assistant`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Assistant request failed");
+  }
+
+  return await response.json();
 }
