@@ -1,9 +1,10 @@
 """Production prediction API for EduPath AI."""
 
 from __future__ import annotations
-
-import logging
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import os
+import logging
 import json
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -180,6 +181,31 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+# -----------------------------
+# Serve React Frontend
+# -----------------------------
+FRONTEND_DIR = ROOT_DIR / "app" / "dist"
+
+if FRONTEND_DIR.exists():
+
+    app.mount(
+        "/assets",
+        StaticFiles(directory=FRONTEND_DIR / "assets"),
+        name="assets",
+    )
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_frontend(full_path: str):
+        if (
+            full_path.startswith("api")
+            or full_path.startswith("docs")
+            or full_path.startswith("openapi.json")
+            or full_path.startswith("redoc")
+            or full_path.startswith("health")
+        ):
+            raise HTTPException(status_code=404)
+
+        return FileResponse(FRONTEND_DIR / "index.html")
 
 # Read external assistant/LLM API key from environment (do NOT commit your key).
 # Set `GEMINI_API_KEY` in your shell or an untracked `.env` file before starting the server.
@@ -483,11 +509,15 @@ def _build_roadmap(
         ],
     )
 
+@app.get("/", include_in_schema=False)
+async def root():
+    if FRONTEND_DIR.exists():
+        return FileResponse(FRONTEND_DIR / "index.html")
 
-@app.get("/", tags=["system"])
-def root() -> dict[str, str]:
-    return {"service": "EduPath AI API", "docs": "/docs"}
-
+    return {
+        "service": "EduPath AI API",
+        "docs": "/docs"
+    }
 
 @app.get("/health", tags=["system"])
 def health() -> dict[str, Any]:
